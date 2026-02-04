@@ -62,12 +62,24 @@ defmodule LiveMonitorWeb.MonitorLive do
     Process.send_after(self(), :tick, 1000)
   end
 
-  # --- Components ---
-
   attr :label, :string, required: true
   attr :value, :integer, required: true
   attr :color, :string, default: "blue"
+
   defp progress_bar(assigns) do
+    # FIX: We map the simple name to the full Tailwind class.
+    # Because the full strings "bg-blue-600" etc. exist here,
+    # Tailwind will see them and generate the CSS.
+    color_class = case assigns.color do
+      "blue"   -> "bg-blue-600"
+      "purple" -> "bg-purple-600"
+      "yellow" -> "bg-yellow-500" # Yellow-500 usually looks better than 600
+      _        -> "bg-gray-600"   # Fallback
+    end
+
+    # We assign this new class to the socket assigns for use in the template
+    assigns = assign(assigns, :color_class, color_class)
+
     ~H"""
     <div class="mb-6">
       <div class="flex justify-between mb-2">
@@ -76,7 +88,7 @@ defmodule LiveMonitorWeb.MonitorLive do
       </div>
       <div class="w-full bg-gray-200 rounded-full h-4">
         <div
-          class={"bg-#{@color}-600 h-4 rounded-full transition-all duration-500 ease-out"}
+          class={@color_class <> " h-4 rounded-full transition-all duration-500 ease-out"}
           style={"width: #{@value}%"}
         >
         </div>
