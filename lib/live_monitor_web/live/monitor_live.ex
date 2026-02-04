@@ -14,6 +14,7 @@ defmodule LiveMonitorWeb.MonitorLive do
     {:ok, assign(socket,
       cpu: initial_stats.cpu,
       memory: initial_stats.memory,
+      disk: initial_stats.disk, # Add this
       is_running: true
     )}
   end
@@ -27,6 +28,7 @@ defmodule LiveMonitorWeb.MonitorLive do
 
         <.progress_bar label="CPU Usage" value={@cpu} color="blue" />
         <.progress_bar label="Memory Usage" value={@memory} color="purple" />
+        <.progress_bar label="Disk Usage (Root)" value={@disk} color="yellow" />
 
         <div class="mt-8 text-center">
           <button phx-click="toggle_updates" class={"px-6 py-2 rounded text-white " <>
@@ -46,7 +48,7 @@ defmodule LiveMonitorWeb.MonitorLive do
     # We fetch new stats from our Logic Module
     new_stats = Stats.get_current_stats()
 
-    {:noreply, assign(socket, cpu: new_stats.cpu, memory: new_stats.memory)}
+    {:noreply, assign(socket, cpu: new_stats.cpu, memory: new_stats.memory, disk: new_stats.disk)}
   end
 
   @impl true

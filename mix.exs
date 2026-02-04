@@ -21,7 +21,7 @@ defmodule LiveMonitor.MixProject do
   def application do
     [
       mod: {LiveMonitor.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :os_mon]
     ]
   end
 
